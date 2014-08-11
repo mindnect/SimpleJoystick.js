@@ -47,7 +47,7 @@ Joystick.createJoystick = function () {
     cc.Sprite.create(res.Joystick_Thumb_png);
 
     var joystick = new SimpleJoystick(size);
-    joystick.setName("Joystick");
+    //joystick.setName("Joystick"); rc1 has bug
     joystick.setPosition(position);
     joystick.setThumbSprite(cc.Sprite.create(res.Joystick_Thumb_png));
     joystick.setBackgroundSprite(cc.Sprite.create(res.Joystick_Background_png));
@@ -68,7 +68,7 @@ Joystick.createAttkButton = function () {
     );
 
     var button = new SimpleButton(size);
-    button.setName("AttackButton");
+    //button.setName("AttackButton"); rc1 has bug
     button.setDefaultSprite(cc.Sprite.create(res.Button1_Default_png));
     button.setActivetdSprite(cc.Sprite.create(res.Button1_Pressed_png));
     button.setPressSprite(cc.Sprite.create(res.Button1_Pressed_png));
@@ -91,7 +91,7 @@ Joystick.createDefenseButton = function () {
     );
 
     var button = new SimpleButton(size);
-    button.setName("DefenseButton");
+    //button.setName("DefenseButton");  rc1 has bug
     button.setDefaultSprite(cc.Sprite.create(res.Button2_Default_png));
     button.setActivetdSprite(cc.Sprite.create(res.Button2_Pressed_png));
     button.setPressSprite(cc.Sprite.create(res.Button2_Pressed_png));
