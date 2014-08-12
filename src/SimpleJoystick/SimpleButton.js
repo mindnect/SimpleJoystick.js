@@ -35,19 +35,6 @@ var SimpleButton = cc.Node.extend({
     onEnterTransitionDidFinish: function () {
         this._super();
 
-        // Touch
-        var touchListener = cc.EventListener.create({
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            swallowTouches: true,
-            onTouchBegan: this.onTouchBegan,
-            onTouchMoved: this.onTouchMoved,
-            onTouchEnded: this.onTouchEnded,
-            onTouchCancelled: this.onTouchCancelled
-        },this);
-
-        touchListener.setSwallowTouches(true);
-        cc.eventManager.addListener(touchListener, this);
-
         // Keyboard
         if (this._isKeyboard) {
             var keyListener = cc.EventListener.create({
@@ -58,6 +45,22 @@ var SimpleButton = cc.Node.extend({
 
             cc.eventManager.addListener(keyListener, this);
         }
+        else{
+            // Touch
+            var touchListener = cc.EventListener.create({
+                event: cc.EventListener.TOUCH_ONE_BY_ONE,
+                swallowTouches: true,
+                onTouchBegan: this.onTouchBegan,
+                onTouchMoved: this.onTouchMoved,
+                onTouchEnded: this.onTouchEnded,
+                onTouchCancelled: this.onTouchCancelled
+            },this);
+
+            touchListener.setSwallowTouches(true);
+            cc.eventManager.addListener(touchListener, this);
+        }
+
+
 
         this.scheduleUpdate();
         if (!this._isEnabled) this._sprDefault.setVisible(false);

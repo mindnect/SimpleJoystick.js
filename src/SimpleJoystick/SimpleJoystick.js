@@ -14,8 +14,8 @@ var SimpleJoystick = cc.Node.extend({
 
     _deadRadiusSq: 0,
 
-    _baseRadius: 0.0,
-    _baseRadiusSq: 0.0,
+    _joystickRadius: 0.0,
+    _josystickRadiusSq: 0.0,
 
     _thumbRadius: 0.0,
     _thumbRadiusSq: 0.0,
@@ -27,31 +27,23 @@ var SimpleJoystick = cc.Node.extend({
 
     _isActive: false,
     _isKeyboard: false,
+    _keys: [],
 
 
     ctor: function (size) {
         this._super();
         this.setContentSize(size);
 
-        this._baseRadius = size.width / 2;
-        this._baseRadiusSq = this._baseRadius * this._baseRadius;
-
-        this.setThumbRadius(this._baseRadius);
+        this.setJoystickRadius(size.width / 2);
+        this.setThumbRadius(size.width / 2);
+    },
+    setJoystickRadius: function (radius) {
+        this._joystickRadius = radius;
+        this._josystickRadiusSq = radius * radius;
     },
 
     onEnterTransitionDidFinish: function () {
         this._super();
-
-        var touchListener = cc.EventListener.create({
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            swallowTouches: true,
-            onTouchBegan: this.onTouchBegan,
-            onTouchMoved: this.onTouchMoved,
-            onTouchEnded: this.onTouchEnded,
-            onTouchCancelled: this.onTouchCancelled
-        });
-        touchListener.setSwallowTouches(true);
-        cc.eventManager.addListener(touchListener, this);
 
         if (this._isKeyboard) {
             var keyListener = cc.EventListener.create({
@@ -61,6 +53,18 @@ var SimpleJoystick = cc.Node.extend({
             });
 
             cc.eventManager.addListener(keyListener, this);
+        }
+        else {
+            var touchListener = cc.EventListener.create({
+                event: cc.EventListener.TOUCH_ONE_BY_ONE,
+                swallowTouches: true,
+                onTouchBegan: this.onTouchBegan,
+                onTouchMoved: this.onTouchMoved,
+                onTouchEnded: this.onTouchEnded,
+                onTouchCancelled: this.onTouchCancelled
+            });
+            touchListener.setSwallowTouches(true);
+            cc.eventManager.addListener(touchListener, this);
         }
 
         this.scheduleUpdate();
@@ -72,10 +76,42 @@ var SimpleJoystick = cc.Node.extend({
     },
 
     update: function (delta) {
-
+        if (this._isKeyboard) {
+            var pos = cc.p(0, 0);
+            var check = false;
+            if (this._keys[cc.KEY.left]) {
+                pos.x -= this._joystickRadius;
+                check = true;
+            }
+            if (this._keys[cc.KEY.right]) {
+                pos.x += this._joystickRadius;
+                check = true;
+            }
+            if (this._keys[cc.KEY.up]) {
+                pos.y += this._joystickRadius;
+                check = true;
+            }
+            if (this._keys[cc.KEY.down]) {
+                pos.y -= this._joystickRadius;
+                check = true;
+            }
+            if (check) {
+                this.updateVelocity(cc.p(pos.x + this._stickPosition.x, pos.y + this._stickPosition.y));
+            } else {
+                this.updateVelocity(pos);
+            }
+        }
         if (this._thumbSprite) {
             this._thumbSprite.setPosition(this._stickPosition);
         }
+    },
+    onKeyPressed: function (keyCode, event) {
+        var target = event.getCurrentTarget();
+        target._keys[keyCode] = true;
+    },
+    onKeyReleased: function (keyCode, event) {
+        var target = event.getCurrentTarget();
+        target._keys[keyCode] = false;
     },
 
     updateVelocity: function (pos) {
@@ -183,6 +219,12 @@ var SimpleJoystick = cc.Node.extend({
     },
     setNumOfDirection: function (numberOfDirections) {
         this._numberOfDirections = numberOfDirections;
+    },
+    setIsKeyboard: function (isKeyboard) {
+        this._isKeyboard = true;
+    },
+    getIsKeyboard: function () {
+        return this._isKeyboard;
     }
 });
 

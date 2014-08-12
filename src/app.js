@@ -53,6 +53,7 @@ Joystick.createJoystick = function () {
     joystick.setBackgroundSprite(cc.Sprite.create(res.Joystick_Background_png));
     joystick.setDeadRadius(8.0);
     joystick.setThumbRadius(41 - 10);
+    joystick.setIsKeyboard(true);
     //joystick.setIsDPad(true);
 
     return joystick;
