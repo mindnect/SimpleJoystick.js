@@ -84,7 +84,7 @@ var SimpleJoystick = cc.Node.extend({
         var dSq = dx * dx + dy * dy;
 
         // check D-Pad dead zone
-        if (dSq < this._deadRadiusSq) {
+        if (dSq < this._deadRadiusSq && this._isDPad) {
             this._velocity = cc.p(0, 0);
             this._degree = 0.0;
             this._stickPosition = pos;
@@ -102,6 +102,7 @@ var SimpleJoystick = cc.Node.extend({
             angle = Math.round(angle / anglePerSector) * anglePerSector;
         }
 
+        // out of range
         if (this._thumbRadiusSq < dSq || this._isDPad) {
             var cosAngle = Math.cos(angle);
             var sinAngle = Math.sin(angle);
